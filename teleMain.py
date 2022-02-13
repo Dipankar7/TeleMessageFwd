@@ -19,22 +19,23 @@ FROM_ = "1249862622"
 #TO_ = config("TO_CHANNEL")
 TO_ = "1249862622"
 #string = os.environ.get('SESSION')
-string = None
+string1 = "incog"
 
 FROM = [int(i) for i in FROM_.split()]
 TO = [int(i) for i in TO_.split()]
 
 try:
-    Bot = TelegramClient(StringSession(string), APP_ID, API_HASH)
+    #Bot = TelegramClient(StringSession(string), APP_ID, API_HASH)
+    Bot = TelegramClient(string1, APP_ID, API_HASH)
     Bot.start()
 except Exception as ap: 
     print(f"ERROR - {ap}")
     exit(1) 
 
-@Bot.on(events.NewMessage(incoming=True, chats=FROM))
-#@Bot.on(events.NewMessage(incoming=True))
+#@Bot.on(events.NewMessage(incoming=True, chats=FROM))
+@Bot.on(events.NewMessage(incoming=True))
 async def send(event):
-   
+    print(event)
     logging.info(event.text)
     for i in TO:
         try:
