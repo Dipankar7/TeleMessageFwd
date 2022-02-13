@@ -5,7 +5,7 @@ from decouple import config
 import logging
 from telethon.sessions import StringSession
 
-logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
+logging.basicConfig(filename='app.log', format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
 
 print("Starting...")
 
@@ -15,9 +15,9 @@ APP_ID = "19859411"
 #API_HASH = config("API_HASH", default=None)
 API_HASH = "eb27349b19f7020edb828118b45f647d"
 #FROM_ = config("FROM_CHANNEL")
-FROM_ = "1403175761 1249862622"
+FROM_ = "1249862622"
 #TO_ = config("TO_CHANNEL")
-TO_ = ""
+TO_ = "1249862622"
 #string = os.environ.get('SESSION')
 string = None
 
@@ -29,13 +29,13 @@ try:
     Bot.start()
 except Exception as ap: 
     print(f"ERROR - {ap}")
-    exit(1)
+    exit(1) 
 
 @Bot.on(events.NewMessage(incoming=True, chats=FROM))
 #@Bot.on(events.NewMessage(incoming=True))
 async def send(event):
-    print(event)
-    print(event.text)
+   
+    logging.info(event.text)
     for i in TO:
         try:
             if event.poll:
@@ -53,7 +53,8 @@ async def send(event):
                     await Bot.send_file(i, media, caption = event.text, link_preview = False)
                     return
             else:
-                await Bot.send_message(i, event.text, link_preview = False)
+                str1 = "Forwarding %s" %event.text
+                await Bot.send_message(i, str1, link_preview = False)
 
         except Exception as e:
             print(e)
