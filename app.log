@@ -1,0 +1,2 @@
+[WARNING/2022-02-13 10:51:19,590] telethon.network.mtprotosender: Connection error 1 during auth_key gen: ConnectionError: Not connected
+[WARNING/2022-02-13 10:51:21,552] telethon.network.mtprotosender: Connection error 2 during auth_key gen: ConnectionError: Not connected

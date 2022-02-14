@@ -15,7 +15,7 @@ APP_ID = "19859411"
 #API_HASH = config("API_HASH", default=None)
 API_HASH = "eb27349b19f7020edb828118b45f647d"
 #FROM_ = config("FROM_CHANNEL")
-FROM_ = "1249862622"
+FROM_ = "1249862622 1068975486"
 #TO_ = config("TO_CHANNEL")
 TO_ = "1249862622"
 #string = os.environ.get('SESSION')
