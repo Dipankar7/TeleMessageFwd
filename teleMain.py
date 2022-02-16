@@ -33,7 +33,7 @@ bot_token = config("BOT_TOKEN")
 chat_id = config("CHAT_ID", cast=int)
 
 
-string1 = "incog"
+string1 = config("SESSION_NAME")
 logging.info("Forwarding Messages from : %s" % FROM_)
 logging.info("Forwarding messages to : %s" % TO_)
 
