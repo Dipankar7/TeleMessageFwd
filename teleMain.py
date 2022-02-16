@@ -4,39 +4,65 @@ from telethon import TelegramClient, events
 from decouple import config
 import logging
 from telethon.sessions import StringSession
+import telegram as tt
 
-logging.basicConfig(filename='app.log', format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
+import logging
 
-print("Starting...")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("app.log"),
+        logging.StreamHandler()
+    ]
+)
+
+#logging.basicConfig(filename='app.log', format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
+logging.info("Starting...")
 
 # Basics
-#APP_ID = config("APP_ID", default=None, cast=int)
-APP_ID = "19859411"
-#API_HASH = config("API_HASH", default=None)
-API_HASH = "eb27349b19f7020edb828118b45f647d"
-#FROM_ = config("FROM_CHANNEL")
-FROM_ = "1249862622 1068975486"
-#TO_ = config("TO_CHANNEL")
-TO_ = "1249862622"
-#string = os.environ.get('SESSION')
+APP_ID = config("APP_ID", default=None, cast=int)
+
+API_HASH = config("API_HASH", default=None)
+
+FROM_ = config("FROM_CHANNEL")
+
+TO_ = config("TO_CHANNEL")
+
+bot_token = config("BOT_TOKEN")
+chat_id = config("CHAT_ID", cast=int)
+
+
 string1 = "incog"
+logging.info("Forwarding Messages from : %s" % FROM_)
+logging.info("Forwarding messages to : %s" % TO_)
+
+logging.info("Using session : %s" % string1)
 
 FROM = [int(i) for i in FROM_.split()]
 TO = [int(i) for i in TO_.split()]
 
+
 try:
-    #Bot = TelegramClient(StringSession(string), APP_ID, API_HASH)
     Bot = TelegramClient(string1, APP_ID, API_HASH)
     Bot.start()
 except Exception as ap: 
-    print(f"ERROR - {ap}")
+    logging.error(f"ERROR - {ap}")
     exit(1) 
 
-#@Bot.on(events.NewMessage(incoming=True, chats=FROM))
-@Bot.on(events.NewMessage(incoming=True))
+def send_message_bot(message_to_send, bot_token, chat_id):
+    """ This function will send the message to bot. """
+    try:
+        bot = tt.Bot(bot_token)
+        bot.sendMessage(chat_id=chat_id,text= message_to_send)
+        logging.info("Got It")
+    except Exception as err:
+        logging.error("Error in sending message with bot: %s" % err)
+    return True
+
+
+@Bot.on(events.NewMessage(incoming=True, chats=FROM))
 async def send(event):
-    print(event)
-    logging.info(event.text)
     for i in TO:
         try:
             if event.poll:
@@ -54,11 +80,13 @@ async def send(event):
                     await Bot.send_file(i, media, caption = event.text, link_preview = False)
                     return
             else:
-                str1 = "Forwarding %s" %event.text
+                logging.info(event.text)
+                str1 = "Forwarded _|_: %s" %event.text
+                send_message_bot(str1, bot_token, chat_id)
                 await Bot.send_message(i, str1, link_preview = False)
 
         except Exception as e:
-            print(e)
+            logging.error(e)
 
-print("Bot has started.")
+logging.info("Bot has started.")
 Bot.run_until_disconnected()
